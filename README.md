@@ -4,7 +4,7 @@ This program extracts **trigrams** (see [trigram](http://en.wikipedia.org/wiki/N
 ### Project contents:
 
 - src/main: Java source code
-- src/test:	Java Unit tests
+- src/test: Java Unit tests
 
 ### How to run:
 
@@ -28,11 +28,11 @@ src/main/resources/input
 
 Executions using sample input files should be similar to the following:
 
-`java -cp target/TextGenerator-1.0-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/small.txt`
+`java -cp target/TextGenerator-1.1-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/small.txt`
 
-`java -cp target/TextGenerator-1.0-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/medium.txt`
+`java -cp target/TextGenerator-1.1-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/medium.txt`
 
-`java -cp target/TextGenerator-1.0-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/large.txt`
+`java -cp target/TextGenerator-1.1-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/large.txt`
 Unit tests can be run using:
 
 `mvn test`
