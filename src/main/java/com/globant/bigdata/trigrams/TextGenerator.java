@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  * Analyzes an input text file in order to extract word trigrams. Those trigrams
@@ -14,6 +16,8 @@ import java.util.concurrent.ExecutionException;
  * @author oscar.mendez
  */
 public class TextGenerator {
+
+    private static final Logger logger = Logger.getLogger(TextGenerator.class.getName());
 
     /**
      * Entry point
@@ -29,44 +33,47 @@ public class TextGenerator {
      * when executing parallel trigram extraction
      */
     public static void main(String[] args) throws FileNotFoundException, InterruptedException, ExecutionException, IOException {
-        //TODO change project to maven or gradle
         //TODO Create properties file and extract application parameters
-        //TODO Create unit tests with several input sizes, several input files
-        //at the same time and considering extreme situations: empty file,
-        //empty map, one-key map, etc.
-        //TODO Change sysout to logger
-        //TODO Review a better way to package the software product
-        //TODO Implement sentences and paragraphs generation
-        
+        //TODO Implement sentences and paragraphs generation (Capitalize first letter is pending)
+
         //Validate input
         if (args.length <= 0) {
             System.out.println("Usage:\nTextGenerator <input_file_path>");
-            System.exit(1);
+            if (logger.isDebugEnabled()) {
+                logger.log(Level.ERROR, "Not input file provided by the user");
+            }
             return;
         }
 
         WordExtractor we = new WordExtractor(args[0]);
         if (!we.isValidFilePath()) {
             System.out.println(args[0] + " is not a valid file or cannot be read.");
-            System.exit(1);
+            if (logger.isDebugEnabled()) {
+                logger.log(Level.ERROR, "Invalid input file");
+            }
             return;
         }
+
+        logger.log(Level.INFO, "Input file validations OK");
 
         //Extract strings from input file and split in parts for
         //concurrent processing
         List<String> chunks = we.extractWords();
 
+        logger.log(Level.INFO, "Input file has been splitted in " + chunks.size() + "chunks");
+
         //Parallel generation of the trigram map
         Map<String, List<String>> trigrams = we.generateTrigramsMap(chunks);
-
+        
+        logger.log(Level.INFO, "Trigrams extracted: " + trigrams.size());
+            
         //Automatic text generation using the trigram map
         WordProducer wp = new WordProducer(args[0] + "_output", trigrams);
         wp.writeText(200);
         
+            logger.log(Level.INFO, "Text generation completed.");
+
         //TODO Erase temp chunks
-        
-        
-        System.exit(0);
     }
 
 }

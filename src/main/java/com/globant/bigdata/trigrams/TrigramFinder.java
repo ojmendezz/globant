@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  * Task for finding trigrams in a text fragment.
@@ -17,6 +19,8 @@ import java.util.concurrent.Callable;
  * @author oscar.mendez
  */
 public class TrigramFinder implements Callable<String> {
+    
+    private static final Logger logger = Logger.getLogger(TrigramFinder.class.getName());
 
     private String filePath;
     private String jobId;
@@ -42,6 +46,9 @@ public class TrigramFinder implements Callable<String> {
      */
     @Override
     public String call() throws IOException {
+        if(logger.isDebugEnabled()){
+            logger.log(Level.DEBUG, jobId + " invoked for chunk " + filePath);
+        }
         buffer.add(br.readLine());
         buffer.add(br.readLine());
         String word;

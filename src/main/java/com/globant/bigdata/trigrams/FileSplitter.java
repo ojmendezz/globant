@@ -9,6 +9,8 @@ import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  * Splits an input file into smaller files, filtering the content to allow only
@@ -18,6 +20,8 @@ import java.util.List;
  */
 public class FileSplitter {
 
+    private static final Logger logger = Logger.getLogger(FileSplitter.class.getName());
+    
     private final String filePath;
     private StreamTokenizer st;
     private List<String> chunks;
@@ -58,7 +62,9 @@ public class FileSplitter {
         filePart.flush();
         filePart.close();
         globalCount += count;
-        System.out.println("Total words: " + globalCount);
+        if(logger.isDebugEnabled()){
+            logger.log(Level.DEBUG, "Total words: " + globalCount);
+        }
 
     }
 
@@ -94,7 +100,9 @@ public class FileSplitter {
         String newFilePartName = filePath + "_" + chunks.size();
         filePart = new PrintWriter(newFilePartName);
         chunks.add(newFilePartName);
-        System.out.println("New split created: " + newFilePartName);
+        if(logger.isDebugEnabled()){
+            logger.log(Level.DEBUG, "New split created: " + newFilePartName);
+        }
     }
 
     /**

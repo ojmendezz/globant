@@ -14,11 +14,11 @@ This software project uses Maven as the project management tool. Only the source
 
 (requires maven installed and configured)
 
-A jar file named *TextGenerator-1.0-SNAPSHOT.jar* in the directory named target is created.
+A jar file named *TextGenerator-1.1-SNAPSHOT-jar-with-dependencies.jar* in the directory named target is created (sorry the long name).
 
 The program can be executed as follows:
 
-`java -cp target/TextGenerator-1.0-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator <input_file_path>`
+`java -cp target/TextGenerator-1.1-SNAPSHOT-jar-with-dependencies.jar com.globant.bigdata.trigrams.TextGenerator <input_file_path>`
 
 (requires java installed and configured)
 
@@ -28,11 +28,11 @@ src/main/resources/input
 
 Executions using sample input files should be similar to the following:
 
-`java -cp target/TextGenerator-1.1-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/small.txt`
+`java -cp target/TextGenerator-1.1-SNAPSHOT-jar-with-dependencies.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/small.txt`
 
-`java -cp target/TextGenerator-1.1-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/medium.txt`
+`java -cp target/TextGenerator-1.1-SNAPSHOT-jar-with-dependencies.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/medium.txt`
 
-`java -cp target/TextGenerator-1.1-SNAPSHOT.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/large.txt`
+`java -cp target/TextGenerator-1.1-SNAPSHOT-jar-with-dependencies.jar com.globant.bigdata.trigrams.TextGenerator src/main/resources/input/large.txt`
 Unit tests can be run using:
 
 `mvn test`
