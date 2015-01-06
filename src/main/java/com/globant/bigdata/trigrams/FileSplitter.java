@@ -21,6 +21,8 @@ public class FileSplitter {
     private final String filePath;
     private StreamTokenizer st;
     private List<String> chunks;
+    //TODO Extract as a property
+    //TODO Try to calculate the split size
     public static final int SPLIT_SIZE = 10000;
     PrintWriter filePart;
 

@@ -58,6 +58,7 @@ public class WordExtractor {
         }
 
         //Launch tasks
+        //TODO Evaluate a better adaptative pool size
         ExecutorService executorService = Executors.newFixedThreadPool(chunks.size());
         List<Future<String>> results = executorService.invokeAll(finders);
 

@@ -18,7 +18,7 @@ public class TextGenerator {
     /**
      * Entry point
      *
-     * @param args the command line arguments. Only the firs one is used for
+     * @param args the command line arguments. Only the first one is used for
      * providing the input file path.
      * @throws java.io.FileNotFoundException If the input file cannot be found
      * @throws java.io.IOException If there is a problem reading or writing
@@ -29,16 +29,27 @@ public class TextGenerator {
      * when executing parallel trigram extraction
      */
     public static void main(String[] args) throws FileNotFoundException, InterruptedException, ExecutionException, IOException {
-
+        //TODO change project to maven or gradle
+        //TODO Create properties file and extract application parameters
+        //TODO Create unit tests with several input sizes, several input files
+        //at the same time and considering extreme situations: empty file,
+        //empty map, one-key map, etc.
+        //TODO Change sysout to logger
+        //TODO Review a better way to package the software product
+        //TODO Implement sentences and paragraphs generation
+        
         //Validate input
         if (args.length <= 0) {
             System.out.println("Usage:\nTextGenerator <input_file_path>");
+            System.exit(1);
             return;
         }
 
         WordExtractor we = new WordExtractor(args[0]);
         if (!we.isValidFilePath()) {
-
+            System.out.println(args[0] + " is not a valid file or cannot be read.");
+            System.exit(1);
+            return;
         }
 
         //Extract strings from input file and split in parts for
@@ -51,7 +62,11 @@ public class TextGenerator {
         //Automatic text generation using the trigram map
         WordProducer wp = new WordProducer(args[0] + "_output", trigrams);
         wp.writeText(200);
-
+        
+        //TODO Erase temp chunks
+        
+        
+        System.exit(0);
     }
 
 }
