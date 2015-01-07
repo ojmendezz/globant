@@ -11,25 +11,38 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 /**
  * Parallel extraction of trigrams.
- * 
+ *
  * @author oscar.mendez
  */
 public class WordExtractor {
-    
+
     private static final Logger logger = Logger.getLogger(WordExtractor.class.getName());
 
     private String filePath;
 
-    public WordExtractor(String filePath) {
+    /**
+     * Maximum number of threads able to run simultaneously to generate
+     * trigrams. Can be configured in the <strong>config.properties</strong>
+     * file.
+     */
+    private int poolSize;
+
+    public WordExtractor(String filePath) throws ConfigurationException {
         this.filePath = filePath;
+
+        PropertiesConfiguration pc = new PropertiesConfiguration("config.properties");
+        poolSize = pc.getInt("concurrent.threads");
     }
 
     /**
-     * Validate a file path
+     * Validates a file path
+     *
      * @return <code>true</code> if the path is valid
      */
     public boolean isValidFilePath() {
@@ -46,7 +59,7 @@ public class WordExtractor {
      * @throws IOException if there is a problem reading or writing files
      * @throws FileNotFoundException If the input file does not exist
      */
-    public List<String> extractWords() throws IOException, FileNotFoundException {
+    public List<String> extractWords() throws IOException, FileNotFoundException, ConfigurationException {
         FileSplitter fs = new FileSplitter(filePath);
         fs.split();
         List<String> chunks = fs.getChunks();
@@ -61,16 +74,17 @@ public class WordExtractor {
         List<TrigramFinder> finders = new ArrayList<TrigramFinder>();
 
         for (int i = 0; i < chunks.size(); i++) {
-            finders.add(new TrigramFinder(chunks.get(i), "Chunk_" + (i+1), trigrams));
+            finders.add(new TrigramFinder(chunks.get(i), "Chunk_" + (i + 1), trigrams));
         }
-        
-        if(logger.isDebugEnabled()){
-            logger.debug(finders.size() + " chunks available to be executed in parallel");
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(finders.size() + " chunks available to be processed.");
+            logger.debug("Up to " + poolSize + " chunks may be processed in parallel.");
         }
 
         //Launch tasks
         //TODO Evaluate a better adaptative pool size
-        ExecutorService executorService = Executors.newFixedThreadPool(chunks.size());
+        ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
         List<Future<String>> results = executorService.invokeAll(finders);
 
         //Print tasks results when done
@@ -79,8 +93,8 @@ public class WordExtractor {
         }
 
         executorService.shutdown();
-        
-        if(logger.isInfoEnabled()){
+
+        if (logger.isInfoEnabled()) {
             logger.info(trigrams.size() + " trigrams found.");
         }
 

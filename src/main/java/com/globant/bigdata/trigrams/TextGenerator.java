@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 
 /**
@@ -33,7 +34,7 @@ public class TextGenerator {
      * @throws java.util.concurrent.ExecutionException If there is a problem
      * when executing parallel trigram extraction
      */
-    public static void main(String[] args) throws FileNotFoundException, InterruptedException, ExecutionException, IOException {
+    public static void main(String[] args) throws FileNotFoundException, InterruptedException, ExecutionException, IOException, ConfigurationException {
         //TODO Create properties file and extract application parameters
         //TODO Implement sentences and paragraphs generation (Capitalize first letter is pending)
         logger.info("-------Text Generation starting right now...-------");
@@ -86,7 +87,7 @@ public class TextGenerator {
         tick = System.currentTimeMillis();
         final String outputFileName = args[0] + "_output";
         
-        System.out.println("Extracted trigrams are going to be used to automatic text generation.");
+        System.out.println("Extracted trigrams are going to be used for automatic text generation.");
         WordProducer wp = new WordProducer(outputFileName, trigrams);
         wp.writeText(WORDS_TO_WRITE);
         

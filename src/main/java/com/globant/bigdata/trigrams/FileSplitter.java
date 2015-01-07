@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,35 +27,40 @@ public class FileSplitter {
     private final String filePath;
     private StreamTokenizer st;
     private List<String> chunks;
-    //TODO Extract as a property
-    //TODO Try to calculate the split size
-    public static final int SPLIT_SIZE = 10000;
+    /**
+     * Number of words in each resulting split. Can be configured in the
+     * <strong>config.properties</strong> file.
+     */
+    public int splitSize;
     PrintWriter filePart;
 
-    public FileSplitter(String filePath) throws FileNotFoundException {
+    public FileSplitter(String filePath) throws FileNotFoundException, ConfigurationException {
         this.filePath = filePath;
         chunks = new ArrayList<String>();
         FileInputStream fis = new FileInputStream(filePath);
         st = new StreamTokenizer(new BufferedReader(new InputStreamReader(fis)));
         st.lowerCaseMode(true);
+        //Load split size parameter
+        PropertiesConfiguration pc = new PropertiesConfiguration("config.properties");
+        splitSize = pc.getInt("split.size");
     }
 
     /**
      * Reads words from the input file and create new files of
-     * <code>SPLIT_SIZE</code> words in each of them. The output files contain
+     * <code>splitSize</code> words in each of them. The output files contain
      * one word per line.
      *
      * @throws IOException If there is a problem reading or writing files
      */
     public void split() throws IOException {
-        System.out.println("Splitting file using this split size (number of words): " + SPLIT_SIZE);
+        System.out.println("Splitting file using this split size (number of words): " + splitSize);
         String word;
         int count = 0;
         int globalCount = 0;
         newOutputFile();
         while ((word = getNext()) != null) {
             filePart.println(word);
-            if (count >= SPLIT_SIZE) {
+            if (count >= splitSize) {
                 globalCount += count;
                 count = 0;
                 newOutputFile();

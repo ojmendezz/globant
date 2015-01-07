@@ -2,11 +2,13 @@ package com.globant.bigdata.trigrams;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.configuration.ConfigurationException;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
@@ -52,12 +54,16 @@ public class TextGeneratorTest {
     public void badInputFile(){
         try {
             TextGenerator.main(new String[] {"This/file/does/not/exists"});
-            assertTrue(outContent.toString().contains("This/file/does/not/exists is not a valid file or cannot be read."));
+            assertTrue(outContent.toString().contains("File: \"This/file/does/not/exists\" is not a valid file or cannot be read."));
         } catch (InterruptedException ex) {
             logger.log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
             logger.log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (FileNotFoundException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }catch (IOException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } catch (ConfigurationException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
     }
@@ -71,7 +77,11 @@ public class TextGeneratorTest {
             logger.log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
             logger.log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (FileNotFoundException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }catch (IOException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } catch (ConfigurationException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
     }
@@ -85,7 +95,11 @@ public class TextGeneratorTest {
             logger.log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
             logger.log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (FileNotFoundException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }catch (IOException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } catch (ConfigurationException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
     }
