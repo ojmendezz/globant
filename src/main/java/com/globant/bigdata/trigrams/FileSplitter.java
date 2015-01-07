@@ -1,6 +1,7 @@
 package com.globant.bigdata.trigrams;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +10,6 @@ import java.io.PrintWriter;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 public class FileSplitter {
 
     private static final Logger logger = Logger.getLogger(FileSplitter.class.getName());
-    
+
     private final String filePath;
     private StreamTokenizer st;
     private List<String> chunks;
@@ -46,6 +46,7 @@ public class FileSplitter {
      * @throws IOException If there is a problem reading or writing files
      */
     public void split() throws IOException {
+        System.out.println("Splitting file using this split size (number of words): " + SPLIT_SIZE);
         String word;
         int count = 0;
         int globalCount = 0;
@@ -62,8 +63,8 @@ public class FileSplitter {
         filePart.flush();
         filePart.close();
         globalCount += count;
-        if(logger.isDebugEnabled()){
-            logger.log(Level.DEBUG, "Total words: " + globalCount);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Total words: " + globalCount);
         }
 
     }
@@ -98,10 +99,13 @@ public class FileSplitter {
             filePart.close();
         }
         String newFilePartName = filePath + "_" + chunks.size();
-        filePart = new PrintWriter(newFilePartName);
+        File newFilePart = new File(newFilePartName);
+        //Make a temporal file
+        newFilePart.deleteOnExit();
+        filePart = new PrintWriter(newFilePart);
         chunks.add(newFilePartName);
-        if(logger.isDebugEnabled()){
-            logger.log(Level.DEBUG, "New split created: " + newFilePartName);
+        if (logger.isDebugEnabled()) {
+            logger.debug("New split created: " + newFilePartName);
         }
     }
 
