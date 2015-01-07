@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -41,13 +40,13 @@ public class TrigramFinder implements Callable<String> {
      * Reads a word stream and creates trigrams in a map where the first two
      * words are the key and the third one is the value.
      *
-     * @return Message indicating succesful execution
+     * @return Message indicating successful execution
      * @throws IOException If there is a problem reading the input stream
      */
     @Override
     public String call() throws IOException {
         if(logger.isDebugEnabled()){
-            logger.log(Level.DEBUG, jobId + " invoked for chunk " + filePath);
+            logger.debug("Job " + jobId + " invoked for chunk " + filePath);
         }
         buffer.add(br.readLine());
         buffer.add(br.readLine());
@@ -68,7 +67,7 @@ public class TrigramFinder implements Callable<String> {
 
         br.close();
 
-        return "Process " + jobId + " finished.";
+        return "Extraction of trigrams from chunk " + jobId + " has finished.";
     }
 
 }

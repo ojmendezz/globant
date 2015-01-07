@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -18,6 +17,8 @@ import org.apache.log4j.Logger;
 public class TextGenerator {
 
     private static final Logger logger = Logger.getLogger(TextGenerator.class.getName());
+    
+    private static final int WORDS_TO_WRITE = 200;
 
     /**
      * Entry point
@@ -35,45 +36,69 @@ public class TextGenerator {
     public static void main(String[] args) throws FileNotFoundException, InterruptedException, ExecutionException, IOException {
         //TODO Create properties file and extract application parameters
         //TODO Implement sentences and paragraphs generation (Capitalize first letter is pending)
-
+        logger.info("-------Text Generation starting right now...-------");
+        
         //Validate input
         if (args.length <= 0) {
             System.out.println("Usage:\nTextGenerator <input_file_path>");
             if (logger.isDebugEnabled()) {
-                logger.log(Level.ERROR, "Not input file provided by the user");
+                logger.error("Not input file provided by the user");
             }
             return;
         }
-
+        
         WordExtractor we = new WordExtractor(args[0]);
         if (!we.isValidFilePath()) {
-            System.out.println(args[0] + " is not a valid file or cannot be read.");
+            System.out.println("File: \"" + args[0] + "\" is not a valid file or cannot be read.");
             if (logger.isDebugEnabled()) {
-                logger.log(Level.ERROR, "Invalid input file");
+                logger.error("Invalid input file: " + args[0]);
             }
             return;
         }
 
-        logger.log(Level.INFO, "Input file validations OK");
+        System.out.println("File: " + args[0] + " is ready to be processed.");
+        
+        logger.info("Input file validations OK");
 
         //Extract strings from input file and split in parts for
         //concurrent processing
+        long tick = System.currentTimeMillis();
+        long startTime = tick;
+        
         List<String> chunks = we.extractWords();
+        
+        long tock = System.currentTimeMillis();
+        logger.info("Words extraction from file finished");
+        logger.info("Elapsed time during this task: " + (tock-tick) + " ms");
 
-        logger.log(Level.INFO, "Input file has been splitted in " + chunks.size() + "chunks");
+        System.out.println("Input file has been splitted in " + chunks.size() + " chunks");
 
         //Parallel generation of the trigram map
+        tick = System.currentTimeMillis();
+        
         Map<String, List<String>> trigrams = we.generateTrigramsMap(chunks);
         
-        logger.log(Level.INFO, "Trigrams extracted: " + trigrams.size());
-            
+        tock = System.currentTimeMillis();
+        logger.info("Trigrams map generation completed");
+        logger.info("Elapsed time during this task: " + (tock-tick) + " ms");
+             
         //Automatic text generation using the trigram map
-        WordProducer wp = new WordProducer(args[0] + "_output", trigrams);
-        wp.writeText(200);
+        tick = System.currentTimeMillis();
+        final String outputFileName = args[0] + "_output";
         
-            logger.log(Level.INFO, "Text generation completed.");
+        System.out.println("Extracted trigrams are going to be used to automatic text generation.");
+        WordProducer wp = new WordProducer(outputFileName, trigrams);
+        wp.writeText(WORDS_TO_WRITE);
+        
+        tock = System.currentTimeMillis();
+        logger.info("Automatic text writting finished");
+        logger.info("Elapsed time during this task: " + (tock-tick) + " ms");
 
-        //TODO Erase temp chunks
+        
+        System.out.println("Text generation completed. " + WORDS_TO_WRITE +
+                " words written.");
+        System.out.println("Take a look to the generated file at: " + outputFileName);
+        System.out.println("Elapsed time for this execution: " + (tock - startTime) + "ms");
     }
 
 }

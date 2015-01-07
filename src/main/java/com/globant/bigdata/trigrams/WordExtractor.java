@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.apache.log4j.Logger;
 
 /**
  * Parallel extraction of trigrams.
@@ -18,6 +19,8 @@ import java.util.concurrent.Future;
  * @author oscar.mendez
  */
 public class WordExtractor {
+    
+    private static final Logger logger = Logger.getLogger(WordExtractor.class.getName());
 
     private String filePath;
 
@@ -25,6 +28,10 @@ public class WordExtractor {
         this.filePath = filePath;
     }
 
+    /**
+     * Validate a file path
+     * @return <code>true</code> if the path is valid
+     */
     public boolean isValidFilePath() {
         File f = new File(filePath);
         return f.canRead() && f.isFile();
@@ -54,7 +61,11 @@ public class WordExtractor {
         List<TrigramFinder> finders = new ArrayList<TrigramFinder>();
 
         for (int i = 0; i < chunks.size(); i++) {
-            finders.add(new TrigramFinder(chunks.get(i), "job_" + i, trigrams));
+            finders.add(new TrigramFinder(chunks.get(i), "Chunk_" + (i+1), trigrams));
+        }
+        
+        if(logger.isDebugEnabled()){
+            logger.debug(finders.size() + " chunks available to be executed in parallel");
         }
 
         //Launch tasks
@@ -68,6 +79,10 @@ public class WordExtractor {
         }
 
         executorService.shutdown();
+        
+        if(logger.isInfoEnabled()){
+            logger.info(trigrams.size() + " trigrams found.");
+        }
 
         return trigrams;
     }

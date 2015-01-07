@@ -40,6 +40,12 @@ public class TextGeneratorTest {
     
     @After
     public void tearDown() {
+        //Delete generated files
+        File testOutputFile = new File("src/main/resources/input/medium.txt_output");
+        if(testOutputFile.exists()){
+            testOutputFile.delete();
+        }
+        
     }
     
     @Test
