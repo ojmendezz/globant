@@ -28,7 +28,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fully.qualified.MainClass</mainClass>
+                            <mainClass>com.globant.bigdata.trigrams.TextGenerator</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -44,6 +44,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.globant.bigdata.trigrams.TextGenerator</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
